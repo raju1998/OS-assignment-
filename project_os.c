@@ -91,6 +91,28 @@ void Queue3(int pid ,int burst,int prior){
             }
 	
 }
+int isEmpty(struct Process* Queue)
+{
+    if(Queue==NULL)
+        return 1;
+    else 
+		return 0;
+}
+int process_exhausted(struct Process* Queue)
+{
+    struct Process *ptr=Queue;
+    if(isEmpty(Queue))
+        return 1;
+    else{
+        while(ptr!=NULL)
+        {
+            if(ptr->burst_time!=0)
+                return 0;
+            ptr=ptr->next;
+        }
+    }
+    return 1;
+}
 
 void Insert(int burst,int prior,int pid)
 {
