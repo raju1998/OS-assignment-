@@ -7,8 +7,8 @@ int counter=0;
 int wait_time=0;
 
 struct Process{
-    int burst_time,priority,process_pid;
-    
+    int burst_time,priority,process_id;
+    int wait_time,end_time,b;
     struct Process* next;
 };
 /*struct Queue{
@@ -20,9 +20,12 @@ struct Process* queue3=NULL;
 
 void Queue1(int pid ,int burst,int prior){
 	 struct Process* temp=(struct Process*)malloc(sizeof(struct Process));
-            temp->process_pid=pid;
+            temp->process_id=pid;
             temp->burst_time=burst;
             temp->priority=prior;
+            temp->wait_time=0;
+            temp->end_time=0;
+            temp->b=burst;
             temp->next=NULL;
             if(queue1==NULL)
             {
@@ -45,8 +48,11 @@ void Queue2(int pid,int burst,int prior)
 {
     struct Process* temp=(struct Process*)malloc(sizeof(struct Process));
     temp->burst_time=burst;
-    temp->process_pid=pid;
+    temp->process_id=pid;
     temp->priority=prior;
+    temp->wait_time=0;
+    temp->end_time=0;
+    temp->b=burst;
     temp->next=NULL;
     if(queue2==NULL)
     {
@@ -73,9 +79,12 @@ void Queue2(int pid,int burst,int prior)
 }
 void Queue3(int pid ,int burst,int prior){
 	 struct Process* temp=(struct Process*)malloc(sizeof(struct Process));
-            temp->process_pid=pid;
+            temp->process_id=pid;
             temp->burst_time=burst;
             temp->priority=prior;
+            temp->wait_time=0;
+            temp->end_time=0;
+            temp->b=burst;
             temp->next=NULL;
             if(queue1==NULL)
              {
@@ -127,6 +136,101 @@ void Insert(int burst,int prior,int pid)
     {
         printf("Priority must be in the given Range.\n");
         return;
+    }
+    
+}
+void priority_scheduling()
+{
+	int outer_time=10;
+	 if(isEmpty(queue2))
+        return;
+    struct Process* ptr=queue2;
+    int total_time=10;
+    while(total_time>0)
+    {
+        if(process_exhausted(queue2))
+        {
+            return;
+        }
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=queue2;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        if(total_time>=ptr->burst_time)
+        {
+           	ptr->wait_time+=counter-ptr->end_time;
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            outer_time-=ptr->burst_time;
+            counter+=ptr->burst_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+        }
+        else{
+            ptr->wait_time+=counter-ptr->end_time;
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            ptr->burst_time-=outer_time;
+            counter+=outer_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            outer_time=0;
+        }
+    }
+}
+void FCFS()
+{
+	int outer_time=10;
+	 if(isEmpty(queue3))
+        return;
+    struct Process* ptr=queue3;
+    int total_time=10;
+    while(total_time>0)
+    {
+        if(process_exhausted(queue3))
+        {
+            return;
+        }
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=queue3;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        if(total_time>=ptr->burst_time)
+        {
+      
+            ptr->wait_time+=counter-ptr->end_time;
+        	printf("\n  P%d  %10d ",ptr->process_id,counter);
+        
+            outer_time-=ptr->burst_time;
+            counter+=ptr->burst_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+        }
+        else{
+            ptr->wait_time+=counter-ptr->end_time;
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            ptr->burst_time-=outer_time;
+            counter+=outer_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            outer_time=0;
+        }
     }
     
 }
