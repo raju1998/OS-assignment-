@@ -4,7 +4,7 @@
 #include<string.h>
 #include<sys/types.h>
 int counter=0;
-int wait_time=0;
+
 
 struct Process{
     int burst_time,priority,process_id;
@@ -86,7 +86,7 @@ void Queue3(int pid ,int burst,int prior){
             temp->end_time=0;
             temp->b=burst;
             temp->next=NULL;
-            if(queue1==NULL)
+            if(queue3==NULL)
              {
               queue3=temp;
               }
@@ -139,6 +139,7 @@ void Insert(int burst,int prior,int pid)
     }
     
 }
+
 void priority_scheduling()
 {
 	int outer_time=10;
@@ -170,7 +171,7 @@ void priority_scheduling()
             printf("%10d\n",counter);
             ptr->burst_time=0;
             if(ptr->next==NULL)
-                ptr=queue1;
+                ptr=queue2;
             else
                 ptr=ptr->next;
         }
@@ -218,7 +219,7 @@ void FCFS()
             printf("%10d\n",counter);
             ptr->burst_time=0;
             if(ptr->next==NULL)
-                ptr=queue1;
+                ptr=queue3;
             else
                 ptr=ptr->next;
         }
@@ -258,9 +259,15 @@ int main()
         Insert(burst,prior,pid);
         
     }
-   // roundrobin_scheduling(queue1);
-   // priority_scheduling(queue2);
-   // FCFS(queue3);
+     printf("\n\t\tThe table is for process start time and end time ");
+    printf("\n\n Process     Start time      End time\n");
+   
+   while(!process_exhausted(queue1)||!process_exhausted(queue2)||!process_exhausted(queue3))
+	{
+	roundrobin_scheduling();
+	priority_scheduling();
+	FCFS();
 }
+  }
 
 
