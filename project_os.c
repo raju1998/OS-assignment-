@@ -139,6 +139,69 @@ void Insert(int burst,int prior,int pid)
     }
     
 }
+void roundrobin_scheduling()
+{
+	if(isEmpty(queue1))
+        return;
+    struct Process* ptr=queue1;
+    int time_quantum=4,outer_time=10;
+    while(outer_time!=0)
+    {
+        if(process_exhausted(queue1))
+            return;
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        
+        if(time_quantum<=outer_time&&time_quantum>=ptr->burst_time)
+        {
+
+            
+            ptr->wait_time+=counter-ptr->end_time;
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+			outer_time-=ptr->burst_time;
+            counter+=ptr->burst_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+        }
+        else if(time_quantum<=outer_time&&time_quantum<ptr->burst_time)
+        {
+            ptr->wait_time+=counter-ptr->end_time;
+           
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            outer_time-=time_quantum;
+            ptr->burst_time-=time_quantum;
+            counter+=4;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+        }
+        else{
+           
+            ptr->wait_time+=counter-ptr->end_time;
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            ptr->burst_time-=outer_time;
+            counter+=outer_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            outer_time=0;
+        }
+
+    }
+}
 
 void priority_scheduling()
 {
