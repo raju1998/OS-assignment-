@@ -4,7 +4,8 @@
 #include<string.h>
 #include<sys/types.h>
 int counter=0;
-
+float average_waiting_time=0,average_turnaround=0;    
+int process_count=0;
 
 struct Process{
     int burst_time,priority,process_id;
@@ -39,6 +40,7 @@ void Queue1(int pid ,int burst,int prior){
              }
               ptr->next=temp;
              }
+             process_count++;
 	
 }
 
@@ -76,6 +78,7 @@ void Queue2(int pid,int burst,int prior)
             ptr->next=temp;
         }
     }
+    process_count++;
 }
 void Queue3(int pid ,int burst,int prior){
 	 struct Process* temp=(struct Process*)malloc(sizeof(struct Process));
@@ -98,6 +101,7 @@ void Queue3(int pid ,int burst,int prior){
                 }
                 ptr->next=temp;
             }
+            process_count++;
 	
 }
 int isEmpty(struct Process* Queue)
@@ -298,6 +302,37 @@ void FCFS()
     }
     
 }
+void average_time()
+{
+    float total_time=0,total_turn_around=0;
+    struct Process* ptr=queue1;
+    while(ptr!=NULL)
+    {
+        total_time+=ptr->wait_time;
+        total_turn_around+=ptr->b+ptr->wait_time;
+        ptr=ptr->next;
+    }
+    ptr=queue2;
+    while(ptr!=NULL)
+    {
+        total_time+=ptr->wait_time;
+        total_turn_around+=ptr->b+ptr->wait_time;
+        ptr=ptr->next;
+    }
+    ptr=queue3;
+    while(ptr!=NULL)
+    {
+        total_time+=ptr->wait_time;
+        total_turn_around+=ptr->b+ptr->wait_time;
+        ptr=ptr->next;
+    }
+    
+    average_waiting_time=total_time/process_count;
+    average_turnaround=total_turn_around/process_count;
+    printf("\nAverage waiting time is: %.3f",average_waiting_time);
+	printf("\nAverage turn around time is %.3f",average_turnaround);
+	average_waiting_time=0;average_turnaround=0;
+}
 
 int main()
 {
@@ -331,6 +366,7 @@ int main()
 	priority_scheduling();
 	FCFS();
 }
-  }
+	average_time();
+}
 
 
