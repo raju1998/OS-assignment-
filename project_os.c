@@ -159,23 +159,7 @@ void roundrobin_scheduling()
                 ptr=ptr->next;
             continue;
         }
-        
-        if(time_quantum<=outer_time&&time_quantum>=ptr->burst_time)
-        {
-
-            printf("\n  P%d  %10d ",ptr->process_id,counter);
-            ptr->wait_time+=counter-ptr->end_time;
-			outer_time-=ptr->burst_time;
-            counter+=ptr->burst_time;
-            ptr->end_time=counter;
-            printf("%10d\n",counter);
-            ptr->burst_time=0;
-            if(ptr->next==NULL)
-                ptr=queue1;
-            else
-                ptr=ptr->next;
-        }
-        else if(time_quantum<=outer_time&&time_quantum<ptr->burst_time)
+         if(time_quantum<=outer_time&&time_quantum<ptr->burst_time)
         {
         	printf("\n  P%d  %10d ",ptr->process_id,counter);
             ptr->wait_time+=counter-ptr->end_time;
@@ -190,13 +174,31 @@ void roundrobin_scheduling()
             else
                 ptr=ptr->next;
         }
+        
+       else if(time_quantum<=outer_time&&time_quantum>=ptr->burst_time)
+        {
+
+            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            ptr->wait_time+=counter-ptr->end_time;
+			outer_time-=ptr->burst_time;
+            counter+=ptr->burst_time;
+            ptr->end_time=counter;
+            printf("%10d\n",counter);
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=queue1;
+            else
+                ptr=ptr->next;
+        }
+        
         else{
            
             ptr->wait_time+=counter-ptr->end_time;
             printf("\n  P%d  %10d ",ptr->process_id,counter);
             ptr->burst_time-=outer_time;
-            counter+=outer_time;
-            ptr->end_time=counter;
+            counter+=outer_time; 
+            ptr->burst_time=0;
+			ptr->end_time=counter;
             printf("%10d\n",counter);
             outer_time=0;
         }
