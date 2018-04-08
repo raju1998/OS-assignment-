@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<sys/types.h>
-int counter=0;
+int counter=0;						//for check the time quantum for all queues
 float average_waiting_time=0,average_turnaround=0;    
 int process_count=0;
 
@@ -12,9 +12,7 @@ struct Process{
     int wait_time,end_time,b;
     struct Process* next;
 };
-/*struct Queue{
-	struct Process *front , *rear;
-};*/
+
 struct Process* queue1=NULL;
 struct Process* queue2=NULL;
 struct Process* queue3=NULL;
@@ -165,9 +163,8 @@ void roundrobin_scheduling()
         if(time_quantum<=outer_time&&time_quantum>=ptr->burst_time)
         {
 
-            
-            ptr->wait_time+=counter-ptr->end_time;
             printf("\n  P%d  %10d ",ptr->process_id,counter);
+            ptr->wait_time+=counter-ptr->end_time;
 			outer_time-=ptr->burst_time;
             counter+=ptr->burst_time;
             ptr->end_time=counter;
@@ -180,9 +177,9 @@ void roundrobin_scheduling()
         }
         else if(time_quantum<=outer_time&&time_quantum<ptr->burst_time)
         {
+        	printf("\n  P%d  %10d ",ptr->process_id,counter);
             ptr->wait_time+=counter-ptr->end_time;
-           
-            printf("\n  P%d  %10d ",ptr->process_id,counter);
+            
             outer_time-=time_quantum;
             ptr->burst_time-=time_quantum;
             counter+=4;
